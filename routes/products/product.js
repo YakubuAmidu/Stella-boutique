@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    res.send('Auth route');
+    res.send('Product routes');
 });
 
 module.exports = router;
