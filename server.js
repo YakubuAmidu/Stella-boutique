@@ -8,6 +8,7 @@ const api = process.env.API_URL;
 
 //Middleware
 app.use(morgan('tiny'));
+app.use(express.json({ extended: false }));
 
 //Connect to database
 connectDB();
