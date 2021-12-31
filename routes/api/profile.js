@@ -36,8 +36,26 @@ router.post('/', [ auth, [
    profileName.user = req.user.id;
    if(name) profileName.name = name;
 
-   console.log(profileName.name);
-   res.send('Name');
+  try {
+      let profile = await Profile.findOne({ user: req.user.id });
+
+      if(profile){
+          profile = await Profile.findOneAndUpdate(
+              { user: req.user.id }, 
+              { $set: profileName }, 
+              { new: true });
+
+              return res.json(profile);
+      }
+
+      profile = new Profile(profileName);
+
+      await profile.save();
+      res.json(profile);
+  }catch(err){
+      console.error(err.message);
+      res.status(500).send('Server Error');
+  }
 });
 
 module.exports = router;
