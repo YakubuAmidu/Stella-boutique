@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const productSchema = new mongoose.Schema({
+const productSchema = mongoose.Schema({
     name: {
         type: String
     },
@@ -15,9 +15,6 @@ const productSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    avatar: {
-        type: String
-    }
 });
 
-exports.Product = mongoose.model('Product', productSchema);
+exports.exports = Product = mongoose.model('Product', productSchema);
