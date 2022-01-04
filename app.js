@@ -1,33 +1,30 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const morgan = require('morgan');
-const connectDB = require('./config/db');
 require('dotenv/config');
-
-// Connect to database
-connectDB();
+const connectDB = require('./config/db');
 
 const app = express();
-const api = process.env.API_URL;
-const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(express.json());
+app.use(express.json({ extended: false }));
 app.use(morgan('tiny'));
 
-// Routes
-const categoriesRoute = require('./routes/categories');
-const ordersRoute = require('./routes/categories');
-const productsRoute = require('./routes/product');
+const PORT = 3000;
+
+const api = process.env.API;
+
+const categoriesRoutes = require('./routes/categories');
+const ordersRoute = require('./routes/orders');
+const productsRoute = require('./routes/products');
 const usersRoute = require('./routes/users');
 
-app.use(`${api}/categories`, categoriesRoute);
+app.use(`${api}/categories`, categoriesRoutes);
 app.use(`${api}/orders`, ordersRoute);
 app.use(`${api}/products`, productsRoute);
 app.use(`${api}/users`, usersRoute);
 
-// Sever
-app.listen(PORT, function(){
-    console.log(`Sever started on port ${PORT}`);
-    console.log(api);
-});
+connectDB();
+
+app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
+})
