@@ -8,14 +8,29 @@ router.get('/', async (req, res) => {
        const categoryList = await Category.find();
 
        if(!categoryList){
-           res.status(500).json({ success: false });
+           return res.status(500).json({ success: false });
        }
 
-       res.send(categoryList);
-    } catch(err) {
+       res.status(200).send(categoryList);
+    } catch (err) {
       console.error(err.message);
     }
  });
+
+ router.get('/:id', async (req, res) => {
+     try {
+        const category = await Category.findById(req.params.id);
+
+        if(!category){
+            return res.status(500).json({ success: false, message: 'The category with the given ID was not found' });
+        }
+
+         res.status(200).send(category);
+         console.log(category);
+     } catch(err) {
+         console.error(err.message);
+     }
+ })
 
 router.post('/', async (req, res) => {
     try {
@@ -32,7 +47,8 @@ router.post('/', async (req, res) => {
        }
 
        res.send(category);
-    } catch(err) {
+       console.log(category);
+    } catch (err) {
       console.error(err.message);
     }
 });
@@ -47,8 +63,8 @@ router.delete('/:id', async (req, res) => {
            return res.status(400).json({ success: false, message: 'The category cannot be found!' });
        }
 
-    }catch(err){
-       return res.status(500).json({ success: false, error: err });
+    } catch (err){
+       console.error(err.message);
     }
 });
 
