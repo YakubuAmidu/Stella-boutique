@@ -6,7 +6,7 @@ const Category = require('../models/category');
 
 router.get('/', async (req, res) => {
     try {
-        const productList = await Product.find();
+        const productList = await Product.find().populate('category');
 
         if(!productList) {
             return res.status(500).json({ success: false });
@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id);
+        const product = await Product.findById(req.params.id).populate('category');
 
         if(!product){
             return res.status(400).json({ success: false });
