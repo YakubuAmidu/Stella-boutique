@@ -19,6 +19,21 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+
+        if(!product){
+            return res.status(400).json({ success: false });
+        }
+
+        res.send(product);
+        console.log(product);
+    } catch (err) {
+      console.error(err.message);
+    }
+})
+
 router.post('/', async (req, res) => {
     try {
         const category = await Category.findById(req.body.category);
