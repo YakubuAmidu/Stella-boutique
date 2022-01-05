@@ -30,7 +30,30 @@ router.get('/', async (req, res) => {
      } catch(err) {
          console.error(err.message);
      }
- })
+ });
+
+ router.put('/:id', async (req, res) => {
+     try {
+         const category = await Category.findByIdAndUpdate(req.params.id, {
+           name: req.body.name,
+           icon: req.body.icon,
+           color: req.body.color
+         }, 
+         {
+             new: true
+         }
+         );
+  
+       if(!category){
+           return res.status(400).json({ success: false, message: 'The category cannot be created!' });
+       }
+
+       res.send(category);
+       console.log(category);
+     } catch (err) {
+         console.error(err.message);
+     }
+ });
 
 router.post('/', async (req, res) => {
     try {
