@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 
 const Product = require('../models/product');
 const Category = require('../models/category');
@@ -71,6 +72,10 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     try {
+        if(!mongoose.isValidObjectId(req.params.id)){
+            return res.status(400).send('Invalid product ID');
+        };
+
         const category = await Category.findById(req.body.category);
 
         if(!category){
@@ -103,5 +108,20 @@ router.put('/:id', async (req, res) => {
        console.error(err.message);
     }
 });
+
+router.delete('/:id', async (req, res) => {
+    try {
+      const product = await Product.findByIdAndRemove(req.params.id);
+
+      if(product){
+          return res.status(200).json({ success: true, message: 'The product have been deleted!' });
+      } else {
+        return res.status(400).json({ success: false, message: 'The product cannot be found!' });
+      }
+
+    } catch (err) {
+        console.error(err.message);
+    }
+})
 
 module.exports = router;
