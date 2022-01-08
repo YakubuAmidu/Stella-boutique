@@ -11,10 +11,10 @@ router.get('/', async (req, res) => {
 
         if(!productList) {
             return res.status(500).json({ success: false });
+        } else {
+            res.status(200).send(productList);
+            console.log(productList);
         }
-            
-           res.status(200).send(productList);
-           console.log(productList);
     } catch (err) {
        console.error(err.message);
     }
@@ -26,10 +26,10 @@ router.get('/:id', async (req, res) => {
 
         if(!product){
             return res.status(400).json({ success: false });
+        } else {
+            res.send(product);
+            console.log(product);
         }
-
-        res.send(product);
-        console.log(product);
     } catch (err) {
       console.error(err.message);
     }
@@ -61,10 +61,10 @@ router.post('/', async (req, res) => {
 
         if(!product){
             return res.status(500).send('Product cannot be created!');
+        } else {
+            res.send(product);
+            console.log(product);
         }
-        
-        res.send(product);
-        console.log(product);
     } catch (err) {
         console.error(err.message);
     }
@@ -100,10 +100,10 @@ router.put('/:id', async (req, res) => {
         
         if(!product){
             return res.status(400).send('The product cannot be updated!');
+        } else {
+            res.status(200).send(product);
+            console.log(product);
         }
-
-        res.status(200).send(product);
-        console.log(product);
     } catch (err) {
        console.error(err.message);
     }
@@ -130,12 +130,12 @@ router.get('/get/count', async (req, res) => {
 
     if(!productCount){
         return res.status(500).json({ success: false });
+    } else {
+        res.status(200).send({
+            productCount
+        });
+        console.log(productCount);
     }
-
-    res.status(200).send({
-        productCount
-    });
-    console.log(productCount);
    } catch(err) {
        console.error(err.message);
    }
@@ -147,10 +147,26 @@ router.get('/get/featured', async (req, res) => {
       
       if(!featuredProduct){
           return res.status(500).json({ success: false });
+      } else {
+        res.status(200).send(featuredProduct);
+        console.log(featuredProduct);
       }
+    } catch (err) {
+        console.error(err.message);
+    }
+});
 
-      res.status(200).send(featuredProduct);
-      console.log(featuredProduct);
+router.get('/get/featured/:count', async (req, res) => {
+    try {
+        const count = req.params.count ? req.params.count : 0;
+        const featuredProduct = await Product.find({ isFeatured: true }).limit(count);
+
+        if(!featuredProduct){
+            return res.status(500).json({ success: false });
+        } else {
+            res.status(200).send(featuredProduct);
+            console.log(featuredProduct);
+        }
     } catch (err) {
         console.error(err.message);
     }
