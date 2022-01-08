@@ -1,7 +1,8 @@
 const express = require('express');
-var bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const router = express.Router();
+var bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 router.get('/', async (req, res) => {
     try {
@@ -68,15 +69,21 @@ router.post('/', async (req, res) => {
 router.post('/login', async (req, res) => {
     try {
         const user = await User.findOne({ email: req.body.email });
+        const secret = process.env.SECRET;
 
         if(!user){
             return res.status(400).send('The user cannot be found!👎');
         } else if(user && bcrypt.compareSync(req.body.password, user.password))
         {
-            return res.status(200).send('User is authenticated!');
-            console.log(user);
+            const token = jwt.sign(
+                {
+                    user: user.id
+                },
+                secret
+            )
+            return res.status(200).send({ user: user.email, token });
         } else {
-            return res.status(400).send('Password is wrong!');
+            return res.status(400).send('Password is wrong!👎');
         }
     } catch (err) {
         console.error(err.message);
