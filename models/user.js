@@ -10,9 +10,12 @@ const UserSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    password: {
+    passwordHash: {
         type: String,
         required: true
+    },
+    avatar: {
+        type: String,
     },
     phone: {
         type: String,
@@ -53,7 +56,7 @@ UserSchema.virtual('id').get(function(){
 });
 
 UserSchema.set('toJSON', {
-    virtuals: true
+    virtuals: true,
 });
 
 module.exports = User = mongoose.model('User', UserSchema);
