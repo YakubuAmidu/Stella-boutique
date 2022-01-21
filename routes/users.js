@@ -86,7 +86,8 @@ router.post('/login', async (req, res) => {
         } else if(user && bcrypt.compareSync(req.body.password, user.passwordHash)){
             const token = jwt.sign(
                 {
-                    userId: user.id
+                    userId: user.id,
+                    isAdmin: user.isAdmin
                 },
                 secret,
                 {
@@ -101,7 +102,32 @@ router.post('/login', async (req, res) => {
     } catch (err) {
         console.error(err.message);
     }
-})
+});
+
+router.post('/register', async (req, res) => {
+    const { name, email, passwordHash, phone, isAdmin, street, apartment, zip, city, country } = req.body;
+
+    let user = new User({
+        name,
+        emeil, 
+        passwordHash,
+        phone,
+        isAdmin,
+        street,
+        apartment,
+        zip, 
+        city,
+        country
+    });
+
+    user = await user.save();
+
+    if(!user){
+        return res.status(400).send('User cannot be created!👎');
+    }
+
+    res.send(user);
+});
 
 module.exports = router;
 
