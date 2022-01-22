@@ -129,6 +129,21 @@ router.post('/register', async (req, res) => {
     res.send(user);
 });
 
+router.delete('/:id/', async (req, res) => {
+    try {
+      const user = await User.findOneAndRemove(req.params.id);
+
+      if(user){
+          res.status(200).json({ success: true, message: 'The user was delelted!👎'});
+      } else {
+          res.status(500).json({ success: false, message: 'The user cannot be delete🚫' });
+      }
+    }catch(err){
+       console.error(err.message);
+    }
+    
+});
+
 router.get('/get/count', async (req, res,) => {
     const userCount = await User.countDocuments((count) => count)
 
