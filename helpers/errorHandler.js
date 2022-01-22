@@ -1,17 +1,11 @@
-function errorHandler(err, res, req, nex){
-
-    //Jwt authorization Error
-   if(err.name === 'UnauthorizedError'){
-       return res.status(401).json({ message: 'The user is not authorized🚫' });
-   } 
-    
-   // Validation Error
-    if(err.name === 'ValidationError'){
-       return res.status(401).json({ message: err });
-   } 
-   
-     // Server error
-   return res.status(500).json(err);
+const errorHandler = (err, res,  req, next) => {
+  if(err.name === "UnauthorizeError"){
+    res.status(401).json({ message: 'The user is not authorized!'})
+  } else if(err.name === "ValidationError"){
+      return res.status(401).json({ message: err });
+  } else {
+    return res.status(500).json({ err });
+  }
 }
 
- module.exports = errorHandler;
+module.exports = errorHandler;

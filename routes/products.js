@@ -164,7 +164,7 @@ router.get('/get/featured', async (req, res) => {
 router.get('/get/featured/:count', async (req, res) => {
     try {
         const count = req.params.count ? req.params.count : 0;
-        const featuredProduct = await Product.find({ isFeatured: true }).limit(count);
+        const featuredProduct = await Product.find({ isFeatured: true }).limit(+count);
 
         if(!featuredProduct){
             return res.status(500).json({ success: false });
