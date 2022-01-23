@@ -1,7 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const authJwt = require('./helpers/jwt');
+// const authJwt = require('./helpers/jwt');
 const errorHandler = require('./helpers/errorHandler');
 require('dotenv/config');
 const connectDB = require('./config/db');
@@ -14,7 +14,7 @@ app.options('*', cors());
 // Middleware
 app.use(express.json({ extended: false }));
 app.use(morgan('tiny'));
-app.use(authJwt());
+// app.use(authJwt());
 app.use(errorHandler);
 
 const PORT = 3000;
