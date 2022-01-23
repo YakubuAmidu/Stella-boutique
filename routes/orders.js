@@ -19,6 +19,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const { orderItems, shippingAddress1, shippingAddress2, phone, city, country, zip, status, totalPrice } = req.body;
+        
         let order = new Order({
             orderItems,
             shippingAddress1,
