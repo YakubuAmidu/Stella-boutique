@@ -4,7 +4,7 @@ const Order = require('../models/order');
 const OrderItem = require('../models/orderItem');
 
 router.get('/', async (req, res) => {
-    const orderList = await Order.find();
+    const orderList = await Order.find().populate('user').sort({'dateOrdered': -1 });
 
  try {
     if(!orderList){
@@ -18,14 +18,67 @@ router.get('/', async (req, res) => {
     console.log(orderList);
 });
 
-router.post('/', async (req, res) => {
-  
+router.get('/:id', async (req, res) => {
+    try {
+    const order = await Order.findById(req.param.id).populate('user').sort({'dateOrdered': -1 });
 
-    try{
+    if(!order){
+        return res.status(400).json({ success: false });
+    } else {
+        res.send(order);
+    }
 
-    } catch (err) {
+    } catch(err) {
         console.error(err.message);
     }
 })
+
+router.post('/', async (req, res) => {
+
+   try {
+    const orderItemsIds = Promise.all(req.body.orderItems.map(async (orderItems) => {
+        let newOrderItems = new OrderItem({
+            quantity: orderItems.quantity,
+            product: orderItems.product
+        });
+
+        newOrderItems = await newOrderItems.save();
+
+        return newOrderItems._id;
+    }));
+    
+    const orderItemsIdsResolved = await orderItemsIds;
+    console.log(orderItemsIdsResolved);
+
+    const { orderItems, shippingAddress1, shippingAddress2, city, country, zip, status, phone, totalPrice, user, } = req.body;
+
+       let order = new Order({
+        orderItems: orderItemsIdsResolved,
+        shippingAddress1,
+        shippingAddress2,
+        city,
+        country,
+        zip,
+        status,
+        phone,
+        totalPrice,
+        user
+       });
+
+       order = await order.save();
+
+       if(!order){
+           return res.status(500).send('The order cannot be create!👎');
+       } else {
+
+       res.send(order);
+       console.log(order);
+       }
+
+   } catch(err) {
+      console.error(err.message);
+   }
+
+});
 
 module.exports = router;
