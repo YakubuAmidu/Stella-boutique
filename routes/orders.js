@@ -20,7 +20,9 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-    const order = await Order.findById(req.param.id).populate('user').sort({'dateOrdered': -1 });
+    const order = await Order.findById(req.param.id)
+    .populate('user').sort({'dateOrdered': -1 })
+    .populate({ path: 'orderItems', populate: { path: 'product', populate: 'category' } });
 
     if(!order){
         return res.status(400).json({ success: false });
