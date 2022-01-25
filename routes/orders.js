@@ -1,4 +1,5 @@
 const express = require('express');
+const order = require('../models/order');
 const router = express.Router();
 const Order = require('../models/order');
 const OrderItem = require('../models/orderItem');
@@ -153,5 +154,22 @@ router.get('/get/totalSales', async (req, res) => {
        console.error(err.message);
    }
 });
+
+router.get('/get/count', async (req, res) => {
+    try {
+        const orderCount = await Order.countDocuments((count) => count);
+
+        if(!orderCount){
+          return res.status(500).json({ success: false });
+        } else {
+            res.send({
+                orderCount: orderCount
+            })
+        }
+
+    } catch (err) {
+        console.error(err.message);
+    }
+})
 
 module.exports = router;
