@@ -3,6 +3,7 @@ const order = require('../models/order');
 const router = express.Router();
 const Order = require('../models/order');
 const OrderItem = require('../models/orderItem');
+const user = require('../models/user');
 
 router.get('/', async (req, res) => {
     const orderList = await Order.find().populate('user').sort({'dateOrdered': -1 });
@@ -165,6 +166,25 @@ router.get('/get/count', async (req, res) => {
             res.send({
                 orderCount: orderCount
             })
+        }
+
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+router.get('/get/userorders/:userid', async (req, res) => {
+    try {
+        const userorderList = await Order.find({ user: req.params.userid }).populate({
+            path: 'orderItems', populate: {
+               path: 'product', populate: 'category'
+            }
+        }).sort({ 'dateOrdered': -1 });
+
+        if(!userorderList){
+            return res.status(500).json({ success: false });
+        } else {
+            res.send(userorderList);
         }
 
     } catch (err) {
