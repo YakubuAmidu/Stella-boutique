@@ -1,40 +1,42 @@
 const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
 const cors = require('cors');
-// const authJwt = require('./helpers/jwt');
-const errorHandler = require('./helpers/errorHandler');
 require('dotenv/config');
+const authJwt = require('./helpers/jwt');
+const errorHandler = require('./helpers/error-handler');
 const connectDB = require('./config/db');
 
-const app = express();
 
 app.use(cors());
-app.options('*', cors());
+app.options('*', cors())
 
-// Middleware
-app.use(express.json({ extended: false }));
+//middleware
+app.use(bodyParser.json());
 app.use(morgan('tiny'));
-// app.use(authJwt());
+app.use(authJwt());
 app.use(errorHandler);
 
-const PORT = 3000;
-
-const api = process.env.API;
-
-// routes
+//Routes
 const categoriesRoutes = require('./routes/categories');
-const ordersRoute = require('./routes/orders');
-const productsRoute = require('./routes/products');
-const usersRoute = require('./routes/users');
+const productsRoutes = require('./routes/products');
+const usersRoutes = require('./routes/users');
+const ordersRoutes = require('./routes/orders');
+
+const api = process.env.API_URL;
 
 app.use(`${api}/categories`, categoriesRoutes);
-app.use(`${api}/orders`, ordersRoute);
-app.use(`${api}/products`, productsRoute);
-app.use(`${api}/users`, usersRoute);
+app.use(`${api}/products`, productsRoutes);
+app.use(`${api}/users`, usersRoutes);
+app.use(`${api}/orders`, ordersRoutes);
 
-// Databse connection
+//Database
 connectDB();
 
-app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
+//Server
+app.listen(3000, ()=>{
+
+    console.log('server is running http://localhost:3000');
 })

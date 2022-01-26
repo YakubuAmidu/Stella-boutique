@@ -4,8 +4,7 @@
   "description": "stella-boutique backend",
   "main": "app.js",
   "scripts": {
-    "start": "node server",
-    "server": "nodemon app.js"
+    "start": "nodemon app.js"
   },
   "repository": {
     "type": "git",
